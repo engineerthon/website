@@ -1,0 +1,6 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#000"/>
+  <text x="600" y="260" text-anchor="middle" font-family="monospace" font-size="100" font-weight="bold" fill="#fff">⚡ ENGINEERTHON</text>
+  <text x="600" y="340" text-anchor="middle" font-family="monospace" font-size="36" fill="rgba(255,255,255,0.6)">London · 7 March 2026</text>
+  <text x="600" y="420" text-anchor="middle" font-family="monospace" font-size="28" fill="rgba(255,255,255,0.4)">12 engineers · 2 rounds · 1 winner</text>
+</svg>

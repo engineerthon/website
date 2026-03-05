@@ -135,7 +135,7 @@ export default function CenteredHero({ fontFamily, animate = true, textBrightnes
           textShadow: textBrightness < 0.7 ? "none" : `0 0 20px rgba(255,255,255,${textBrightness * 0.3})`,
         }}
       >
-        12 Engineers &middot; 3 Rounds &middot; 1 Winner
+        12 Engineers &middot; 2 Rounds &middot; 1 Winner
       </p>
 
       <div

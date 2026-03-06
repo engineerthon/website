@@ -1,4 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+const SEEN_COOKIE = "engineerthon_seen";
+
+function hasSeenAnimation(): boolean {
+  return document.cookie.split("; ").some((c) => c.startsWith(SEEN_COOKIE + "="));
+}
+
+function markAnimationSeen(): void {
+  // Expires in 30 days
+  const d = new Date();
+  d.setTime(d.getTime() + 30 * 24 * 60 * 60 * 1000);
+  document.cookie = `${SEEN_COOKIE}=1; expires=${d.toUTCString()}; path=/; SameSite=Lax`;
+}
 
 interface TerminalRevealProps {
   fontFamily: string;
@@ -193,12 +206,19 @@ const LINES: TerminalLine[] = [
 ];
 
 export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealProps) {
-  const [visibleLines, setVisibleLines] = useState<{ text: string; config: TerminalLine }[]>([]);
-  const [currentLineIdx, setCurrentLineIdx] = useState(0);
+  const skipAnimation = hasSeenAnimation();
+
+  const [visibleLines, setVisibleLines] = useState<{ text: string; config: TerminalLine }[]>(
+    skipAnimation ? LINES.map((l) => ({ text: l.text, config: l })) : []
+  );
+  const [currentLineIdx, setCurrentLineIdx] = useState(skipAnimation ? LINES.length : 0);
   const [currentCharIdx, setCurrentCharIdx] = useState(0);
   const [isTypingLine, setIsTypingLine] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
-  const [allDone, setAllDone] = useState(false);
+  const [allDone, setAllDone] = useState(skipAnimation);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const userScrolledUp = useRef(false);
 
   // Cursor blink
   useEffect(() => {
@@ -206,9 +226,22 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-scroll
+  // Track whether user has scrolled away from the bottom
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      userScrolledUp.current = distFromBottom > 60;
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Auto-scroll only if user hasn't scrolled up
   const scrollToBottom = useCallback(() => {
-    const el = document.getElementById("terminal-scroll");
+    if (userScrolledUp.current) return;
+    const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, []);
 
@@ -216,6 +249,7 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
   useEffect(() => {
     if (currentLineIdx >= LINES.length) {
       setAllDone(true);
+      markAnimationSeen();
       return;
     }
 
@@ -407,6 +441,7 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
 
         {/* Content */}
         <div
+          ref={scrollRef}
           id="terminal-scroll"
           style={{
             flex: 1,

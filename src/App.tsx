@@ -6,9 +6,15 @@ import { useAudio } from "./hooks/useAudio";
 
 const FONT = "'Space Mono', monospace";
 
+function hasSeenAnimation(): boolean {
+  return document.cookie.split("; ").some((c) => c.startsWith("engineerthon_seen="));
+}
+
 export default function App() {
   const [heroKey, setHeroKey] = useState(0);
-  const [scene, setScene] = useState<"hero" | "exiting" | "terminal">("hero");
+  const [scene, setScene] = useState<"hero" | "exiting" | "terminal">(
+    hasSeenAnimation() ? "terminal" : "hero"
+  );
 
   const { play: playAudio, toggleMute, muted, playing: audioPlaying } = useAudio();
 

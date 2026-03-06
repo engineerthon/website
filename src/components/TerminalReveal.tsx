@@ -35,6 +35,7 @@ interface TerminalLine {
   isMuttSep?: boolean;      // ─── separator
   isKeystroke?: boolean;    // simulated keypress e.g. <RET>
   isEmailHeader?: boolean;  // email header fields (From/Subject/etc)
+  isSponsorRow?: boolean;   // sponsor names row
 }
 
 const SEP = "─".repeat(72);
@@ -196,6 +197,15 @@ const LINES: TerminalLine[] = [
     color: "rgba(255,255,255,0.3)",
   },
   { text: "", isBlank: true, delay: 300, typeSpeed: 0 },
+  { text: "── SUPPORTED BY ──────────────────────────", isMuttSep: true, delay: 80, typeSpeed: 0 },
+  { text: "", isBlank: true, delay: 100, typeSpeed: 0 },
+  {
+    text: "STRAND VENTURES · AUTUMN · DAWN CAPITAL",
+    delay: 80,
+    typeSpeed: 0,
+    isSponsorRow: true,
+  },
+  { text: "", isBlank: true, delay: 200, typeSpeed: 0 },
   {
     text: "→ RSVP",
     delay: 200,
@@ -268,7 +278,7 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
     // Instant lines
     if (line.typeSpeed === 0 || line.isBlank || line.isLink || line.isMuttBar ||
         line.isMuttSelected || line.isMuttHint || line.isMuttSep ||
-        line.isKeystroke || line.isEmailHeader) {
+        line.isKeystroke || line.isEmailHeader || line.isSponsorRow) {
       setVisibleLines((prev) => {
         const next = [...prev];
         next[next.length - 1] = { text: line.text, config: line };
@@ -366,6 +376,14 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
       fontWeight: config.bold ? 600 : 400,
     };
 
+    if (config.isSponsorRow) return {
+      ...base,
+      color: "rgba(255,255,255,0.45)",
+      fontSize: 13,
+      letterSpacing: "0.1em",
+      fontWeight: 500,
+    };
+
     if (config.isHeader) return { ...base, fontSize: 15, fontWeight: 700, color: "#fff", letterSpacing: "0.08em" };
     if (config.isDim) return { ...base, color: "rgba(255,255,255,0.5)" };
     if (config.color) return { ...base, color: config.color };
@@ -452,6 +470,44 @@ export default function TerminalReveal({ fontFamily, onBack }: TerminalRevealPro
           {visibleLines.map((line, i) => {
             const isLastLine = i === visibleLines.length - 1;
             const style = getLineStyle(line.config);
+
+            if (line.config.isSponsorRow) {
+              const sponsorLinkStyle: React.CSSProperties = {
+                color: "rgba(255,255,255,0.45)",
+                textDecoration: "none",
+                transition: "color 0.2s ease",
+              };
+              return (
+                <div key={i} style={style}>
+                  <a
+                    href="https://strand-ventures.lovable.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={sponsorLinkStyle}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
+                  >STRAND VENTURES</a>
+                  {" · "}
+                  <a
+                    href="https://www.autumn.co"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={sponsorLinkStyle}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
+                  >AUTUMN</a>
+                  {" · "}
+                  <a
+                    href="https://dawncapital.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={sponsorLinkStyle}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
+                  >DAWN CAPITAL</a>
+                </div>
+              );
+            }
 
             if (line.config.isLink) {
               return (

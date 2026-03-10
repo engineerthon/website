@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENGINEERTHON 2026 — Final Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff; --fg: #000000;
+      --accent: #cc0000; --accent-dim: rgba(204,0,0,0.08);
+      --muted: rgba(0,0,0,0.4);
+      --card: rgba(0,0,0,0.02); --card-hover: rgba(0,0,0,0.05);
+      --border: rgba(0,0,0,0.1);
+      --gold: #b8860b; --silver: #708090; --bronze: #8b4513;
+      --track-a: #0077cc; --track-b: #8800aa;
+      --font: 'Space Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font); }
+    a { color: var(--accent); text-decoration: none; }
+
+    .app { min-height: 100vh; }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.92);
+    }
+    nav .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.15em; }
+    nav .logo span { color: var(--accent); }
+    .archived-badge {
+      font-size: 0.6rem; letter-spacing: 0.1em; padding: 0.2rem 0.6rem;
+      border: 1px solid var(--muted); color: var(--muted);
+    }
+
+    .header { text-align: center; padding: 3rem 1rem 1.5rem; }
+    .header h1 { font-size: 2rem; letter-spacing: 0.2em; margin-bottom: 0.75rem; }
+    .header .date { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    .stats {
+      display: flex; justify-content: center; gap: 2.5rem; margin: 1.5rem 0;
+      font-size: 0.7rem; letter-spacing: 0.08em;
+    }
+    .stat-label { color: var(--muted); margin-bottom: 0.2rem; }
+    .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+    .leaderboard { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+    .lb-header {
+      display: flex; align-items: center; padding: 0.5rem 1.5rem;
+      font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted);
+      border-bottom: 1px solid var(--border); margin-bottom: 0.5rem;
+    }
+    .lb-header .h-rank { width: 3rem; text-align: center; }
+    .lb-header .h-name { flex: 1; padding-left: 1rem; }
+    .lb-header .h-rounds { display: flex; gap: 1.5rem; margin-right: 1.5rem; }
+    .lb-header .h-round { min-width: 4rem; text-align: center; }
+    .lb-header .h-total { min-width: 4rem; text-align: right; }
+
+    .row {
+      display: flex; align-items: center; padding: 0.9rem 1.5rem; margin-bottom: 2px;
+      background: var(--card); border-left: 3px solid transparent;
+    }
+    .row:hover { background: var(--card-hover); }
+    .row.rank-1 { border-left-color: var(--gold); background: rgba(184,134,11,0.06); }
+    .row.rank-2 { border-left-color: var(--silver); }
+    .row.rank-3 { border-left-color: var(--bronze); }
+    .row.eliminated { opacity: 0.4; }
+
+    .rank {
+      width: 3rem; font-size: 1.3rem; font-weight: 700; color: var(--muted);
+      text-align: center; font-variant-numeric: tabular-nums;
+    }
+    .row.rank-1 .rank { color: var(--gold); }
+    .row.rank-2 .rank { color: var(--silver); }
+    .row.rank-3 .rank { color: var(--bronze); }
+
+    .participant-info { flex: 1; padding-left: 1rem; }
+    .p-name { font-size: 0.95rem; margin-bottom: 0.15rem; }
+    .p-meta { font-size: 0.55rem; color: var(--muted); letter-spacing: 0.08em; }
+
+    .round-scores { display: flex; gap: 1.5rem; margin-right: 1.5rem; }
+    .round-chip { text-align: center; min-width: 4rem; }
+    .round-chip .label { font-size: 0.5rem; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 2px; }
+    .round-chip .val { font-size: 0.9rem; color: rgba(0,0,0,0.6); font-variant-numeric: tabular-nums; }
+    .round-chip .val.zero { color: rgba(0,0,0,0.15); }
+
+    .total {
+      font-size: 1.3rem; font-weight: 700; color: var(--accent);
+      font-variant-numeric: tabular-nums; min-width: 4rem; text-align: right;
+    }
+    .row.rank-1 .total { color: var(--gold); }
+
+    .sponsor-row {
+      display: flex; justify-content: center; gap: 2rem; padding: 2rem;
+      font-size: 0.55rem; color: var(--muted); letter-spacing: 0.1em;
+    }
+    .sponsor-row a { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .lb-header { display: none; }
+      .row { flex-wrap: wrap; gap: 0.5rem; }
+      .round-scores { width: 100%; justify-content: space-around; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="logo">⚡ <span>ENGINEERTHON</span></div>
+    <div class="archived-badge">ARCHIVED — 7 MARCH 2026</div>
+  </nav>
+
+  <div class="header">
+    <h1>FINAL LEADERBOARD</h1>
+    <div class="date">SATURDAY 7 MARCH 2026 · LONDON</div>
+  </div>
+
+  <div class="stats">
+    <div style="text-align:center">
+      <div class="stat-label">ENGINEERS</div>
+      <div class="stat-value">12</div>
+    </div>
+    <div style="text-align:center">
+      <div class="stat-label">TOP SCORE</div>
+      <div class="stat-value">86</div>
+    </div>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-header">
+      <div class="h-rank">#</div>
+      <div class="h-name">ENGINEER</div>
+      <div class="h-rounds">
+        <div class="h-round">MVP</div>
+        <div class="h-round">TECHNICAL</div>
+      </div>
+      <div class="h-total">TOTAL</div>
+    </div>
+
+    <div class="row rank-1">
+      <div class="rank">1</div>
+      <div class="participant-info"><div class="p-name">Yash Yadav</div><div class="p-meta">TRACK B</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">78</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val">9</div></div>
+      </div>
+      <div class="total">86</div>
+    </div>
+
+    <div class="row rank-2 eliminated">
+      <div class="rank">2</div>
+      <div class="participant-info"><div class="p-name">Bugatt</div><div class="p-meta">@bugattmark · TRACK B</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">76</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">76</div>
+    </div>
+
+    <div class="row rank-3">
+      <div class="rank">3</div>
+      <div class="participant-info"><div class="p-name">oscarama</div><div class="p-meta">@thereal-atom · TRACK A</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">64</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">64</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="participant-info"><div class="p-name">Shashank</div><div class="p-meta">@shashankdurgad · TRACK B</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">61</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">61</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="participant-info"><div class="p-name">Joakim Talling-Smith</div><div class="p-meta">TRACK A</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">57</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">57</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="participant-info"><div class="p-name">Mohammed Talab</div><div class="p-meta">@MohiCodeHub · TRACK B</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">57</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">57</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="participant-info"><div class="p-name">Adi Prabs</div><div class="p-meta">@TheDarkEyezor · TRACK A</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">50</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">50</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="participant-info"><div class="p-name">Freddie</div><div class="p-meta">TRACK A</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">49</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">49</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="participant-info"><div class="p-name">Matsvei</div><div class="p-meta">@workonthestreets · TRACK A</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">39</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total">39</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="participant-info"><div class="p-name">404 Not Found</div><div class="p-meta">@You-now-Who</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val zero">—</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total" style="color:var(--muted)">0</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="participant-info"><div class="p-name">Alex Reid</div><div class="p-meta">@alexreid0</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val zero">—</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total" style="color:var(--muted)">0</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="participant-info"><div class="p-name">Isaac Tolley</div><div class="p-meta"></div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val zero">—</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total" style="color:var(--muted)">0</div>
+    </div>
+  </div>
+
+  <div class="sponsor-row">
+    <span>SUPPORTED BY</span>
+    <a href="https://strand-ventures.lovable.app/" target="_blank">STRAND VENTURES</a>
+    <a href="https://www.autumn.co" target="_blank">AUTUMN</a>
+    <a href="https://dawncapital.com" target="_blank">DAWN CAPITAL</a>
+  </div>
+</div>
+</body>
+</html>

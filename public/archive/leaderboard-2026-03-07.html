@@ -65,6 +65,7 @@
     .row.rank-2 { border-left-color: var(--silver); }
     .row.rank-3 { border-left-color: var(--bronze); }
     .row.eliminated { opacity: 0.4; }
+    .row.eliminated .p-name { text-decoration: line-through; }
 
     .rank {
       width: 3rem; font-size: 1.3rem; font-weight: 700; color: var(--muted);
@@ -169,16 +170,6 @@
 
     <div class="row">
       <div class="rank">4</div>
-      <div class="participant-info"><div class="p-name">Bugatt</div><div class="p-meta">@bugattmark · TRACK B · ELIMINATED</div></div>
-      <div class="round-scores">
-        <div class="round-chip"><div class="label">MVP</div><div class="val">76</div></div>
-        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
-      </div>
-      <div class="total">76</div>
-    </div>
-
-    <div class="row">
-      <div class="rank">5</div>
       <div class="participant-info"><div class="p-name">Joakim Talling-Smith</div><div class="p-meta">TRACK A</div></div>
       <div class="round-scores">
         <div class="round-chip"><div class="label">MVP</div><div class="val">57</div></div>
@@ -188,7 +179,7 @@
     </div>
 
     <div class="row">
-      <div class="rank">5</div>
+      <div class="rank">4</div>
       <div class="participant-info"><div class="p-name">Mohammed Talab</div><div class="p-meta">@MohiCodeHub · TRACK B</div></div>
       <div class="round-scores">
         <div class="round-chip"><div class="label">MVP</div><div class="val">57</div></div>
@@ -198,7 +189,7 @@
     </div>
 
     <div class="row">
-      <div class="rank">7</div>
+      <div class="rank">6</div>
       <div class="participant-info"><div class="p-name">Adi Prabs</div><div class="p-meta">@TheDarkEyezor · TRACK A</div></div>
       <div class="round-scores">
         <div class="round-chip"><div class="label">MVP</div><div class="val">50</div></div>
@@ -208,7 +199,7 @@
     </div>
 
     <div class="row">
-      <div class="rank">8</div>
+      <div class="rank">7</div>
       <div class="participant-info"><div class="p-name">Freddie</div><div class="p-meta">TRACK A</div></div>
       <div class="round-scores">
         <div class="round-chip"><div class="label">MVP</div><div class="val">49</div></div>
@@ -218,7 +209,7 @@
     </div>
 
     <div class="row">
-      <div class="rank">9</div>
+      <div class="rank">8</div>
       <div class="participant-info"><div class="p-name">Matsvei</div><div class="p-meta">@workonthestreets · TRACK A</div></div>
       <div class="round-scores">
         <div class="round-chip"><div class="label">MVP</div><div class="val">39</div></div>
@@ -245,6 +236,16 @@
         <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
       </div>
       <div class="total" style="color:var(--muted)">0</div>
+    </div>
+
+    <div class="row eliminated">
+      <div class="rank" style="color:var(--accent)">✕</div>
+      <div class="participant-info"><div class="p-name">Bugatt</div><div class="p-meta">@bugattmark · TRACK B · ELIMINATED</div></div>
+      <div class="round-scores">
+        <div class="round-chip"><div class="label">MVP</div><div class="val">76</div></div>
+        <div class="round-chip"><div class="label">TECHNICAL</div><div class="val zero">—</div></div>
+      </div>
+      <div class="total" style="color:var(--muted)">76</div>
     </div>
   </div>
 
